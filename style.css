@@ -1,79 +1,74 @@
-/* reset */
+/* --------------------------------------------------------
+   RESET
+---------------------------------------------------------*/
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* --------------------------------------
-   PAGE BACKGROUND + OVERLAY
---------------------------------------- */
+body {
+  padding-top: 40px; /* Add breathing room above gradient overlay */
+}
+
+/* --------------------------------------------------------
+   PAGE BACKGROUND
+---------------------------------------------------------*/
 body {
   background: url("img/background.jpg") no-repeat center center fixed;
   background-size: cover;
-  margin: 0;
-  padding: 0;
   font-family: "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* Soft overlay for readability */
+  position: relative;
 }
 
-/* light overlay to soften background */
 body::before {
   content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.35); /* ← adjust for lighter/darker */
-  backdrop-filter: blur(2px); /* smooth luxury effect */
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45); /* Slight fade */
+  backdrop-filter: blur(2px);
   z-index: -1;
-  pointer-events: none;
 }
 
-/* wrapper that centers the page */
+/* --------------------------------------------------------
+   PAGE LAYOUT
+---------------------------------------------------------*/
 .page-wrapper {
   width: 95%;
-  max-width: 900px;
-  margin-top: 40px;
+  max-width: 950px;
+  margin: 50px auto 0 auto;
+  padding-bottom: 40px;
 }
 
-/* --------------------------------------
+/* --------------------------------------------------------
    HEADER
---------------------------------------- */
+---------------------------------------------------------*/
 .site-header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 
 .brand-logo {
-  width: 180px;
-  margin-bottom: 12px;
+  width: 170px;
+  margin-bottom: 10px;
 }
 
 .site-title {
   font-family: "Playfair Display", serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: #000;
 }
 
-/* --------------------------------------
-   CHATBOX
---------------------------------------- */
-.chatbox {
-  margin-top: 25px;
-}
-
+/* Latest question */
 .latest-question {
   font-family: "Playfair Display", serif;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  margin-top: 10px;
   color: #c9a66b;
-  margin-bottom: 12px;
   text-align: center;
 }
 
@@ -81,31 +76,41 @@ body::before {
   display: none;
 }
 
-/* --------------------------------------
-   CHAT WINDOW
---------------------------------------- */
+/* --------------------------------------------------------
+   CHAT CONTAINER
+---------------------------------------------------------*/
+.chatbox {
+  margin-top: 25px;
+}
+
 .chat-window {
-  height: 420px;
+  height: 450px;
+  background: #ffffffd9;
+  border-radius: 12px;
   border: 2px solid #000;
   padding: 20px;
   overflow-y: auto;
-  background: rgba(250, 250, 250, 0.92); /* slightly transparent white */
-  border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* --------------------------------------
+/* --------------------------------------------------------
    MESSAGE BUBBLES
---------------------------------------- */
+---------------------------------------------------------*/
 .msg {
+  display: inline-block;
   max-width: 75%;
-  padding: 14px 16px;
+  width: fit-content;
+  padding: 12px 16px;
   border-radius: 18px;
-  margin-bottom: 14px;
   line-height: 1.5;
-  white-space: pre-line;
+  font-size: 17px;
+  white-space: pre-wrap;
 }
 
+/* User bubble (right) */
 .msg.user {
   background: #000;
   color: #fff;
@@ -113,29 +118,31 @@ body::before {
   border-bottom-right-radius: 4px;
 }
 
+/* AI bubble (left) */
 .msg.ai {
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #c9a66b;
   color: #333;
   margin-right: auto;
   border-bottom-left-radius: 4px;
 }
 
-/* --------------------------------------
-   FORM
---------------------------------------- */
+/* --------------------------------------------------------
+   INPUT FORM
+---------------------------------------------------------*/
 .chat-form {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .chat-form input {
   flex: 1;
-  padding: 14px;
+  padding: 16px;
   font-size: 18px;
   border: 1px solid #bbb;
-  border-radius: 8px;
+  border-radius: 10px;
+  background: #ffffffd9;
 }
 
 .chat-form input:focus {
@@ -143,27 +150,43 @@ body::before {
   outline-offset: 2px;
 }
 
+/* Send button */
 .chat-form button {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   background: #000;
   color: white;
   border: none;
   border-radius: 50%;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: 0.2s ease;
 }
 
 .chat-form button:hover {
   opacity: 0.75;
 }
 
-/* --------------------------------------
+/* --------------------------------------------------------
    FOOTER
---------------------------------------- */
+---------------------------------------------------------*/
 .site-footer {
   text-align: center;
-  color: #777;
+  color: #444;
   margin-top: 40px;
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------
+   RESPONSIVE FIXES
+---------------------------------------------------------*/
+@media (max-width: 600px) {
+  .msg {
+    max-width: 90%;
+    font-size: 16px;
+  }
+
+  .chat-window {
+    height: 380px;
+  }
 }
