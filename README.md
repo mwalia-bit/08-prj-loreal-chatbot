@@ -1,6 +1,7 @@
 L'Oréal Beauty Advisor — README
 
 Overview
+
 This project is an interactive L’Oréal Beauty Advisor chatbot.
 Users can ask for recommendations about skincare, haircare, makeup, or fragrance, and the chatbot responds using an AI assistant powered through a Cloudflare Worker connected to the OpenAI API.
 The final experience includes:
