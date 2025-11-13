@@ -1,11 +1,9 @@
-// -----------------------------------------------------
-// L'ORÉAL CHATBOT – FRONTEND SCRIPT
-// -----------------------------------------------------
+// -------------------------------
+// L’Oréal Chatbot Frontend
+// -------------------------------
 
-// Worker endpoint (replace with your deployed Worker URL)
 const WORKER_URL = "https://frosty-cloud-747e.mwalia.workers.dev";
 
-// Conversation memory
 let history = [
   {
     role: "system",
@@ -16,9 +14,11 @@ You ONLY answer questions about:
 - L'Oréal haircare
 - L'Oréal makeup
 - L'Oréal fragrances
-- Routines, skin types, concerns
-If the user asks anything unrelated, politely refuse and redirect.
-Respond professionally, warmly, and concisely.`,
+- Beauty routines & product recommendations
+
+If the user asks anything unrelated, politely decline and redirect.
+Respond warm, concise, and luxurious.
+`,
   },
 ];
 
@@ -27,9 +27,35 @@ const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const latestQ = document.getElementById("latestUserQuestion");
 
-// -----------------------------------------------------
-// Add message to chat window (bubble UI)
-// -----------------------------------------------------
+let typingBubble = null;
+
+// -------------------------------
+// CREATE & REMOVE TYPING BUBBLE
+// -------------------------------
+
+function showTypingBubble() {
+  typingBubble = document.createElement("div");
+  typingBubble.classList.add("typing-indicator");
+  typingBubble.innerHTML = `
+    <span></span>
+    <span></span>
+    <span></span>
+  `;
+  chatWindow.appendChild(typingBubble);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function removeTypingBubble() {
+  if (typingBubble) {
+    typingBubble.remove();
+    typingBubble = null;
+  }
+}
+
+// -------------------------------
+// ADD CHAT MESSAGE
+// -------------------------------
+
 function addMessage(role, text) {
   const bubble = document.createElement("div");
   bubble.classList.add("msg", role === "user" ? "user" : "ai");
@@ -38,45 +64,43 @@ function addMessage(role, text) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-// -----------------------------------------------------
-// Handle Form Submit
-// -----------------------------------------------------
+// -------------------------------
+// FORM SUBMIT
+// -------------------------------
+
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const message = userInput.value.trim();
   if (!message) return;
 
-  // Display user bubble
+  // Show user message
   addMessage("user", message);
 
-  // Display the temporary "user question" banner
-  latestQ.textContent = `"${message}"`;
-  latestQ.classList.remove("hidden");
-
-  // Add to history
   history.push({ role: "user", content: message });
-
-  // Clear input
   userInput.value = "";
 
-  // Fetch from Cloudflare Worker
+  // ----- Show typing animation -----
+  showTypingBubble();
+
+  // ----- Fetch -----
   try {
-    const response = await fetch(WORKER_URL, {
+    const res = await fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: history }),
     });
 
-    const data = await response.json();
-    const aiReply = data.reply;
+    const data = await res.json();
 
-    // Add to chat
+    removeTypingBubble(); // Stop animation
+
+    const aiReply = data.reply;
     addMessage("ai", aiReply);
 
-    // Save reply to history
     history.push({ role: "assistant", content: aiReply });
   } catch (err) {
-    addMessage("ai", "Sorry, something went wrong. Please try again.");
+    removeTypingBubble();
+    addMessage("ai", "Sorry — something went wrong. Please try again.");
   }
 });
